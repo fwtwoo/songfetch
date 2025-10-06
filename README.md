@@ -16,12 +16,12 @@ Some terminal/daemon-based players need an MPRIS bridge installed:
 
 | Player | Package to Install | Command |
 |--------|-------------------|---------|
-| **MPD** | `mpdris2` | `yay -S mpdris2` (Arch)<br>`sudo dnf install mpdris2` (Fedora)<br>`sudo apt install mpdris2` (Debian/Ubuntu)`|
+| **MPD** | `mpdris2` | `yay -S mpdris2` (Arch)<br>`sudo dnf install mpdris2` (Fedora)<br>`sudo apt install mpdris2` (Debian/Ubuntu)|
 | **cmus** | `cmus-mpris` | Check your distro's package manager |
 | **moc** | `moc-mpris` | Check your distro's package manager |
 
 After installing the bridge, enable it:
 ```bash
 systemctl --user enable --now mpDris2  # for MPD
-enable similar services for other players
+# enable similar services for other players
 ```
