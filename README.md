@@ -16,7 +16,7 @@ Some terminal/daemon-based players need an MPRIS bridge installed:
 
 | Player | Package to Install | Command |
 |--------|-------------------|---------|
-| **MPD** | `mpdris2` | `sudo apt install mpdris2` (Debian/Ubuntu)<br>`sudo dnf install mpdris2` (Fedora)<br>`yay -S mpdris2` (Arch) |
+| **MPD** | `mpdris2` | `yay -S mpdris2` (Arch)<br>`sudo apt install mpdris2` (Debian/Ubuntu)<br>`sudo dnf install mpdris2` (Fedora)<br>`yay -S mpdris2` (Arch) |
 | **cmus** | `cmus-mpris` | Check your distro's package manager |
 | **moc** | `moc-mpris` | Check your distro's package manager |
 
