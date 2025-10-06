@@ -23,5 +23,5 @@ Some terminal/daemon-based players need an MPRIS bridge installed:
 After installing the bridge, enable it:
 ```bash
 systemctl --user enable --now mpDris2  # for MPD
-enable similar services for other players
+# enable similar services for other players
 ```
