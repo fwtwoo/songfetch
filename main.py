@@ -1,10 +1,10 @@
-import subprocess
-import getpass
+import subprocess, getpass
+import ascii_magic as am
 
 # Art to ASCII
 def ascii_convert():
-    # Code
-    return
+    art = am.from_image('mop.png')
+    art.to_terminal()
 
 # Main function
 def main():
@@ -58,6 +58,9 @@ def main():
     print(f"{line}\n{player_info}\n{line}")
     print(player_data.stdout.strip())
     print(f"Status: {status_data.stdout.strip()}")
+
+    # Test ASCII convert and print
+    ascii_convert()
 
 # Run the program
 if __name__ == "__main__":

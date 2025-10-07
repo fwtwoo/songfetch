@@ -1,3 +1,7 @@
 plan.md
 *.png
 *.jpg
+venv
+/venv
+.venv
+/.venv
