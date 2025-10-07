@@ -1,36 +1,63 @@
 import subprocess
 import getpass
 
-username = getpass.getuser()
-line = "─────────────────────────────────────────────"
-now_playing = "🎵 Now Playing"
-player_info = "🎧 Player Info"
+# Main function
+def main():
+    p = "hi"
+    # Get the current player seperately
+    player = subprocess.run([
+        "playerctl", "metadata", "--format", "{{ playerName }}"
+    ], capture_output = True, text = True)
 
-player = subprocess.run(["playerctl", "metadata", "--format", "{{ playerName }}"], capture_output=True, text=True)
-title = subprocess.run(["playerctl", "metadata", "title"], capture_output=True, text=True)
-artist = subprocess.run(["playerctl", "metadata", "artist"], capture_output=True, text=True)
-album = subprocess.run(["playerctl", "metadata", "album"], capture_output=True, text=True)
-duration = subprocess.run(["playerctl", "metadata", "--format", "{{ duration(mpris:length) }}"], capture_output=True, text=True)
+    # Getting the track info from playerctl
+    track_data = subprocess.run([
+        "playerctl",
+        "metadata",
+        "--format", (
+            "Title: {{ title }}\n"
+            "Artist: {{ artist }}\n"
+            "Album: {{ album }}\n"
+            "Duration: {{ duration(mpris:length) }}"
+        )
+    ], capture_output = True, text = True)
 
-position = subprocess.run(["playerctl", "metadata", "--format", "{{ duration(position) }}"], capture_output=True, text=True)
-status = subprocess.run(["playerctl", "status"], capture_output=True, text=True)
-url = subprocess.run(["playerctl", "metadata", "--format", "{{ trunc(xesam:url, 45) }}"], capture_output=True, text=True)
+    # Getting the player info from playerctl
+    player_data = subprocess.run([
+        "playerctl",
+        "metadata",
+        "--format", (
+            "Position: {{ duration(position) }}\n"
+            "URL: {{ trunc(xesam:url, 39) }}"
+        )
+    ], capture_output = True, text = True)
 
-print("{0}@{1}".format(username, player.stdout.strip()))
-print(line)
-print(now_playing)
-print(line)
+    # Getting the rest of the info
+    status_data = subprocess.run([
+        "playerctl",
+        "status"
+    ], capture_output = True, text = True)
 
-print(title.stdout.strip())
-print(artist.stdout.strip())
-print(album.stdout.strip())
-print(duration.stdout.strip())
+    # Define some variables for later
+    username = getpass.getuser()
 
-print(line)
-print(player_info)
-print(line)
+    # Define some strings we'll need to print
+    line = "─────────────────────────────────────────────"
+    now_playing = "🎵 Now Playing"
+    player_info = "🎧 Player Info"
 
-print(position.stdout.strip())
-print(status.stdout.strip())
-print(url.stdout.strip())
+    # Print username and track data
+    print("{0}@{1}".format(username, player.stdout.strip()))
+    print(f"{line}\n{now_playing}\n{line}")
+    print(track_data.stdout.strip())
+
+    # Print player data
+    print(f"{line}\n{player_info}\n{line}")
+    print(player_data.stdout.strip())
+    print(f"Status: {status_data.stdout.strip()}")
+
+# Run the program
+if __name__ == "__main__":
+    main()
+
+# TODO: Add terminal colors at the end like fastfetch or onefetch
 
