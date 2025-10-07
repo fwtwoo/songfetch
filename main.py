@@ -1,9 +1,13 @@
 import subprocess
 import getpass
 
+# Art to ASCII
+def ascii_convert():
+    # Code
+    return
+
 # Main function
 def main():
-    p = "hi"
     # Get the current player seperately
     player = subprocess.run([
         "playerctl", "metadata", "--format", "{{ playerName }}"
