@@ -2,9 +2,12 @@ import subprocess, getpass
 import ascii_magic as am
 
 # Art to ASCII
-def ascii_convert():
-    art = am.from_image('mop.png')
-    art.to_terminal()
+def ascii_convert(my_art):
+    try:
+        my_art = am.from_url('https://unsplash.com/photos/young-lion-peeking-through-dry-grass-6uRBk_BpZY4')
+    except OSError as e:
+        print(f'Could not load the image, server said: {e.code} {e.msg}')
+    return my_art
 
 # Main function
 def main():
@@ -60,7 +63,7 @@ def main():
     print(f"Status: {status_data.stdout.strip()}")
 
     # Test ASCII convert and print
-    ascii_convert()
+    ascii_convert(my_art)
 
 # Run the program
 if __name__ == "__main__":
