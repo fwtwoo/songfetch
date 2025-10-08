@@ -1,12 +1,29 @@
 import subprocess, getpass
-import ascii_magic as am
+import ascii_magic as magic
 
 # Art to ASCII
-def ascii_convert(art_url):
-    # Check
+def ascii_convert(art_uri):
+    # Check file type
+    if "file://" in art_uri:
+        # Strip "file://" prefix
+        print("Local file")
+        file_uri = art_uri.replace("file://", "")
+        return file_uri
+        # Maybe add extension if not exists?
+    elif "https://" or "http://" in art_uri:
+        print("Remote link")
+        # Download image
+        # Display it
+    elif art_uri is None:
+        print("Null file")
+        # Display default (like music note)
+    else:
+        print("Null file (else)")
+        # Display default
     try:
-        album_cover = am.from_url(art_url)
-        album_cover.to_terminal()
+        ascii_art = magic.from_url(art_uri)
+        ascii_art = magic.from_image(art_uri)
+        ascii_art.to_terminal()
     except OSError as e:
         print(f'Could not load the image', e)
 
@@ -64,7 +81,8 @@ def main():
     print(f"Status: {status_data.stdout.strip()}")
 
     # Test ASCII convert and print
-    ascii_convert('https://i.scdn.co/image/ab67616d0000b273c1a13209dfe146aef3296e34')
+    #ascii_convert('https://i.scdn.co/image/ab67616d0000b273c1a13209dfe146aef3296e34')
+    ascii_convert("file:///home/fwtwoo/.mozilla/firefox/firefox-mpris/1385_36.png")
 
 # Run the program
 if __name__ == "__main__":
