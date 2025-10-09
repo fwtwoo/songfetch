@@ -1,5 +1,5 @@
 from ascii_convert import convert
-from player_utils import get_art, get_player, get_player_name, get_status, get_track, get_user
+from player_utils import get_art, get_player, get_player_name, get_status, get_track, get_user, get_volume
 
 # Main function
 def main():
@@ -16,6 +16,7 @@ def main():
 
     # Print player data
     print(f"{line}\n{playback_info}\n{line}")
+    print(get_volume())
     print(get_player())
     print(f"Status: {get_status()}")
 
