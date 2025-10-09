@@ -80,13 +80,24 @@ def get_volume():
 
     return f"{percentage}%"
 
-def get_player():
-    # Getting the player info from playerctl
+def get_position():
+    # Getting the info from playerctl
     result = subprocess.run([
         "playerctl",
         "metadata",
         "--format", (
-            "Position: {{ duration(position) }}\n"
+            "Position: {{ duration(position) }}"
+        )
+    ], capture_output = True, text = True)
+
+    return result.stdout.strip()
+
+def get_url():
+    # Getting the info from playerctl
+    result = subprocess.run([
+        "playerctl",
+        "metadata",
+        "--format", (
             "URL: {{ trunc(xesam:url, 39) }}"
         )
     ], capture_output = True, text = True)
@@ -98,6 +109,24 @@ def get_status():
     result = subprocess.run([
         "playerctl",
         "status"
+    ], capture_output = True, text = True)
+
+    return result.stdout.strip()
+
+def get_loop():
+    # Getting the rest of the info
+    result = subprocess.run([
+        "playerctl",
+        "loop"
+    ], capture_output = True, text = True)
+
+    return result.stdout.strip()
+
+def get_shuffle():
+    # Getting the rest of the info
+    result = subprocess.run([
+        "playerctl",
+        "shuffle"
     ], capture_output = True, text = True)
 
     return result.stdout.strip()

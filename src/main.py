@@ -1,5 +1,15 @@
 from ascii_convert import convert
-from player_utils import get_art, get_player, get_player_name, get_status, get_track, get_user, get_volume
+from player_utils import (get_art,
+    get_loop,
+    get_shuffle,
+    get_player_name,
+    get_status,
+    get_track,
+    get_user,
+    get_volume,
+    get_url,
+    get_backend
+)
 
 # Main function
 def main():
@@ -13,12 +23,20 @@ def main():
     print("{0}@{1}".format(get_user(), get_player_name()))
     print(f"{line}\n{now_playing}\n{line}")
     print(get_track())
+    # ADD progress bar
 
     # Print player data
     print(f"{line}\n{playback_info}\n{line}")
-    print(get_volume())
-    print(get_player())
     print(f"Status: {get_status()}")
+    print(f"Volume: {get_volume()}")
+    print(f"Loop: {get_loop()}")
+    print(f"Shuffle: {get_shuffle()}")
+    print(f"Player: {get_player_name()}")
+    print(get_url())
+
+    # Print system data
+    print(f"{line}\n{audio_system}\n{line}")
+    print(f"Backend: {get_backend()}")
 
     # Print ASCII album art
     convert(get_art())
