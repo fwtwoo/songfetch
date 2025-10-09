@@ -1,31 +1,43 @@
-import subprocess, getpass
+import subprocess, getpass, urllib.parse, urllib.request, tempfile
 import ascii_magic as magic
 
 # Art to ASCII
 def ascii_convert(art_uri):
     # Check file type
-    if "file://" in art_uri:
-        # Strip "file://" prefix
-        print("Local file")
-        file_uri = art_uri.replace("file://", "")
-        return file_uri
-        # Maybe add extension if not exists?
-    elif "https://" or "http://" in art_uri:
-        print("Remote link")
-        # Download image
-        # Display it
-    elif art_uri is None:
+    if art_uri is None:
         print("Null file")
         # Display default (like music note)
+
+    # We need to check each URI type
+    elif art_uri.startswith("file://"):
+        try:
+            # Strip "file://" prefix
+            new_uri = art_uri[7:]
+            # Decode to get rid of possible "%20%20..."
+            ascii_art = magic.from_image(urllib.parse.unquote(new_uri))
+        # Catch the error
+        except OSError as e:
+            print(f'Could not load the image', e)
+
+    # Check for URLs
+    elif art_uri.startswith("https://"):
+        try:
+            # Creates a temporary file to store image in
+            temp = tempfile.NamedTemporaryFile()
+            temp.close()
+            # Get the image from the url
+            urllib.request.urlretrieve(art_uri, temp.name)
+            ascii_art = magic.from_image(temp.name)
+        # Catch the error
+        except Exception as e :
+            print(str(e))
+
+    # Edge cases
     else:
-        print("Null file (else)")
-        # Display default
-    try:
-        ascii_art = magic.from_url(art_uri)
-        ascii_art = magic.from_image(art_uri)
-        ascii_art.to_terminal()
-    except OSError as e:
-        print(f'Could not load the image', e)
+        print("Null file (edge case")
+
+    # Print the actual ascii art
+    ascii_art.to_terminal()
 
 # Main function
 def main():
@@ -81,8 +93,9 @@ def main():
     print(f"Status: {status_data.stdout.strip()}")
 
     # Test ASCII convert and print
-    #ascii_convert('https://i.scdn.co/image/ab67616d0000b273c1a13209dfe146aef3296e34')
-    ascii_convert("file:///home/fwtwoo/.mozilla/firefox/firefox-mpris/1385_36.png")
+    # ascii_convert("file:///home/fwtwoo/.mozilla/firefox/firefox-mpris/1385_41.png")
+    # ascii_convert("file:///tmp/strawberry-cover-fcoi3x.jpg")
+    ascii_convert("https://i.scdn.co/image/ab67616d0000b27315350aa1c89e23a5fa6c0de1")
 
 # Run the program
 if __name__ == "__main__":
