@@ -3,8 +3,10 @@ import ascii_magic as magic
 
 # Art to ASCII
 def ascii_convert(art_uri):
+    # Init
+    ascii_art = None
     # Check file type
-    if art_uri is None:
+    if art_uri is None or art_uri.strip() == "": # If return empty string
         print("Null file")
         # Display default (like music note)
 
@@ -20,10 +22,10 @@ def ascii_convert(art_uri):
             print(f'Could not load the image', e)
 
     # Check for URLs
-    elif art_uri.startswith("https://"):
+    elif art_uri.startswith("https://") or art_uri.startswith("http://"):
         try:
             # Creates a temporary file to store image in
-            temp = tempfile.NamedTemporaryFile()
+            temp = tempfile.NamedTemporaryFile(delete=False)
             temp.close()
             # Get the image from the url
             urllib.request.urlretrieve(art_uri, temp.name)
@@ -37,13 +39,19 @@ def ascii_convert(art_uri):
         print("Null file (edge case")
 
     # Print the actual ascii art
-    ascii_art.to_terminal()
+    if ascii_art:
+        ascii_art.to_terminal(columns = 60, width_ratio = 2.2)
 
 # Main function
 def main():
     # Get the current player seperately
     player = subprocess.run([
         "playerctl", "metadata", "--format", "{{ playerName }}"
+    ], capture_output = True, text = True)
+
+    # Get the current album art
+    art_data = subprocess.run([
+        "playerctl", "metadata", "--format", "{{ mpris:artUrl }}"
     ], capture_output = True, text = True)
 
     # Getting the track info from playerctl
@@ -92,10 +100,8 @@ def main():
     print(player_data.stdout.strip())
     print(f"Status: {status_data.stdout.strip()}")
 
-    # Test ASCII convert and print
-    # ascii_convert("file:///home/fwtwoo/.mozilla/firefox/firefox-mpris/1385_41.png")
-    # ascii_convert("file:///tmp/strawberry-cover-fcoi3x.jpg")
-    ascii_convert("https://i.scdn.co/image/ab67616d0000b27315350aa1c89e23a5fa6c0de1")
+    # Print ASCII album art
+    ascii_convert(art_data.stdout.strip())
 
 # Run the program
 if __name__ == "__main__":
