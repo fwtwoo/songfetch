@@ -38,7 +38,9 @@ def convert(art_uri):
         print("Null file (edge case")
 
     # Print the actual ascii art
-    if ascii_art:
-        ascii_art.to_terminal(columns = 60, width_ratio = 2.2) # Increase columns to make bigger
-                                                               # Ratio  2.2 keeps image scaled properly.
+    if ascii_art: # Increase columns to make bigger, ratio 2.2 keeps image scaled properly.
+        ascii_string = ascii_art.to_ascii(columns = 60, width_ratio = 2.2)
+        lines = ascii_string.split('\n')
+        return lines
+
 

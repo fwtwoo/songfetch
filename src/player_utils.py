@@ -86,11 +86,23 @@ def get_position():
         "playerctl",
         "metadata",
         "--format", (
-            "Position: {{ duration(position) }}"
+            "{{ position }}"
         )
     ], capture_output = True, text = True)
 
-    return result.stdout.strip()
+    return int(result.stdout.strip())
+
+def get_duration():
+    # Getting the info from playerctl
+    result = subprocess.run([
+        "playerctl",
+        "metadata",
+        "--format", (
+            "{{ mpris:length }}"
+        )
+    ], capture_output = True, text = True)
+
+    return int(result.stdout.strip())
 
 def get_url():
     # Getting the info from playerctl

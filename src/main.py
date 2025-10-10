@@ -1,5 +1,6 @@
 from ascii_convert import convert
-from player_utils import (get_art,
+from player_utils import (
+    get_art,
     get_loop,
     get_shuffle,
     get_player_name,
@@ -8,8 +9,23 @@ from player_utils import (get_art,
     get_user,
     get_volume,
     get_url,
-    get_backend
+    get_backend,
+    get_duration,
+    get_position
 )
+
+def progress_bar():
+    # Calculate percentage
+    pos = get_position()
+    dur = get_duration()
+    percentage = pos / dur
+
+    # Calculate filled and empty characters
+    filled = int(percentage * 16)
+    empty = 16 - filled
+    fprint = "▓" * filled
+    eprint = "░" * empty
+    print(fprint + eprint)
 
 # Main function
 def main():
@@ -23,6 +39,7 @@ def main():
     print("{0}@{1}".format(get_user(), get_player_name()))
     print(f"{line}\n{now_playing}\n{line}")
     print(get_track())
+    progress_bar()
     # ADD progress bar
 
     # Print player data
@@ -39,7 +56,9 @@ def main():
     print(f"Backend: {get_backend()}")
 
     # Print ASCII album art
-    convert(get_art())
+    new = convert(get_art())
+    for line in new:
+        print(line)
 
 # Run the program
 if __name__ == "__main__":
