@@ -1,5 +1,4 @@
 from ascii_convert import convert
-import datetime
 from player_utils import (
     get_art,
     get_loop,
