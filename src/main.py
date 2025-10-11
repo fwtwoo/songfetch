@@ -50,10 +50,13 @@ def get_info_line():
     audio_system = "🔊 Audio System"
 
     # Here we concatenate all the info into one list
+    # Use ANSI escape sequences to style the colors
     info_lines = [
+        # f"\033[97m{your_text}\033[0m"
+        # f"\033[1;97m{your_text}\033[0m"
         # Print username and track data
-        f"{get_user()}@{get_player_name()}",
-        line, now_playing, line,
+        f"\033[1;97m{get_user()}@{get_player_name()}\033[0m",
+        line, f"\033[1;97m{now_playing}\033[0m", line,
         f"Title: {get_title()}",
         f"Artist: {get_artist()}",
         f"Album: {get_album()}",
@@ -61,7 +64,7 @@ def get_info_line():
         f"{progress_bar()}",
 
         # Print player data
-        line, playback_info, line,
+        line, f"\033[1;97m{playback_info}\033[0m", line,
         f"Status: {get_status()}",
         f"Volume: {get_volume()}",
         f"Loop: {get_loop()}",
@@ -70,7 +73,7 @@ def get_info_line():
         f"URL: {get_url()}",
 
         # Print system data
-        line, audio_system, line,
+        line, f"\033[1;97m{audio_system}\033[0m", line,
         f"Backend: {get_backend()}"
     ]
 
@@ -78,8 +81,10 @@ def get_info_line():
 
 # Main function
 def main():
-    # Define the two lists to iterate over
+    # Stylistic print
     print()
+
+    # Define the two lists to iterate over
     art_col = convert(get_art())
     info_col = get_info_line()
 
@@ -96,14 +101,17 @@ def main():
         new_info_col = info_col + [''] * (len(art_col) - len(info_col))
         # Loop through all lines in art
         for i in range(len(art_col)):
-            print(f"{art_col[i]:{max_art}}{new_info_col[i]:{max_info}}")
+            print(f"{art_col[i]:{max_art}}\033[97m{new_info_col[i]:{max_info}}\033[0m")
 
     else:
         # Pad but the othre way around
         new_art_col = art_col + [''] * (len(info_col) - len(art_col))
         # Loop all lines in info
         for j in range(len(info_col)):
-            print(f"{new_art_col[j]:{max_art}}{info_col[j]:{max_info}}")
+            print(f"{new_art_col[j]:{max_art}}\033[97m{info_col[j]:{max_info}}\033[0m")
+
+    # Stylistic print
+    print()
 
 # Run the program
 if __name__ == "__main__":
