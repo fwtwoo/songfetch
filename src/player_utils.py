@@ -26,17 +26,34 @@ def get_art():
 
     return result.stdout.strip()
 
-def get_track():
-    # Getting various track info from playerctl
+def get_title():
+    # Get the artist
     result = subprocess.run([
-        "playerctl",
-        "metadata",
-        "--format", (
-            "Title: {{ title }}\n"
-            "Artist: {{ artist }}\n"
-            "Album: {{ album }}\n"
-            "Duration: {{ duration(mpris:length) }}"
-        )
+        "playerctl", "metadata", "--format", "{{ title }}"
+    ], capture_output = True, text = True)
+
+    return result.stdout.strip()
+
+def get_artist():
+    # Get the artist
+    result = subprocess.run([
+        "playerctl", "metadata", "--format", "{{ artist }}"
+    ], capture_output = True, text = True)
+
+    return result.stdout.strip()
+
+def get_album():
+    # Get the album
+    result = subprocess.run([
+        "playerctl", "metadata", "--format", "{{ album }}"
+    ], capture_output = True, text = True)
+
+    return result.stdout.strip()
+
+def get_duration_formatted():
+    # Get the album
+    result = subprocess.run([
+        "playerctl", "metadata", "--format", "{{ duration(mpris:length) }}"
     ], capture_output = True, text = True)
 
     return result.stdout.strip()
@@ -110,7 +127,7 @@ def get_url():
         "playerctl",
         "metadata",
         "--format", (
-            "URL: {{ trunc(xesam:url, 39) }}"
+            "{{ trunc(xesam:url, 39) }}"
         )
     ], capture_output = True, text = True)
 

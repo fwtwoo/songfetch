@@ -5,7 +5,10 @@ from player_utils import (
     get_shuffle,
     get_player_name,
     get_status,
-    get_track,
+    get_title,
+    get_artist,
+    get_album,
+    get_duration_formatted,
     get_user,
     get_volume,
     get_url,
@@ -39,37 +42,68 @@ def progress_bar():
 
     return fprint + eprint + display_str
 
-# Main function
-def main():
-    # Define some strings we'll need to print
+def get_info_line():
+    # Get some strings to use later
     line = "─────────────────────────────────────────────"
     now_playing = "🎵 Now Playing"
     playback_info = "🎧 Playback Info"
-    audio_system = "🎧 Audio System"
+    audio_system = "🔊 Audio System"
 
-    # Print username and track data
-    print("{0}@{1}".format(get_user(), get_player_name()))
-    print(f"{line}\n{now_playing}\n{line}")
-    print(get_track())
-    print(progress_bar())
+    # Here we concatenate all the info into one list
+    info_lines = [
+        # Print username and track data
+        f"{get_user()}@{get_player_name()}",
+        line, now_playing, line,
+        f"Title: {get_title()}",
+        f"Artist: {get_artist()}",
+        f"Album: {get_album()}",
+        f"Duration: {get_duration_formatted()}",
+        f"{progress_bar()}",
 
-    # Print player data
-    print(f"{line}\n{playback_info}\n{line}")
-    print(f"Status: {get_status()}")
-    print(f"Volume: {get_volume()}")
-    print(f"Loop: {get_loop()}")
-    print(f"Shuffle: {get_shuffle()}")
-    print(f"Player: {get_player_name()}")
-    print(get_url())
+        # Print player data
+        line, playback_info, line,
+        f"Status: {get_status()}",
+        f"Volume: {get_volume()}",
+        f"Loop: {get_loop()}",
+        f"Shuffle: {get_shuffle()}",
+        f"Player: {get_player_name()}",
+        f"URL: {get_url()}",
 
-    # Print system data
-    print(f"{line}\n{audio_system}\n{line}")
-    print(f"Backend: {get_backend()}")
+        # Print system data
+        line, audio_system, line,
+        f"Backend: {get_backend()}"
+    ]
 
-    # Print ASCII album art
-    new = convert(get_art())
-    for line in new:
-        print(line)
+    return info_lines
+
+# Main function
+def main():
+    # Define the two lists to iterate over
+    print()
+    art_col = convert(get_art())
+    info_col = get_info_line()
+
+    # Code found on stackoverflow (saved me hella time lol) to print
+    # lists next to each other when one list may be longer than the other:
+
+    # Find the longest line in both column lists
+    max_art = max(len(x) for x in art_col)
+    max_info = max(len(y) for y in info_col)
+ 
+    # Compare lenghts
+    if len(art_col) > len(info_col):
+        # Replace but with added padding (spaces)
+        new_info_col = info_col + [''] * (len(art_col) - len(info_col))
+        # Loop through all lines in art
+        for i in range(len(art_col)):
+            print(f"{art_col[i]:{max_art}}{new_info_col[i]:{max_info}}")
+
+    else:
+        # Pad but the othre way around
+        new_art_col = art_col + [''] * (len(info_col) - len(art_col))
+        # Loop all lines in info
+        for j in range(len(info_col)):
+            print(f"{new_art_col[j]:{max_art}}{info_col[j]:{max_info}}")
 
 # Run the program
 if __name__ == "__main__":
