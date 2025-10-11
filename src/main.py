@@ -50,10 +50,8 @@ def get_info_line():
     audio_system = "🔊 Audio System"
 
     # Here we concatenate all the info into one list
-    # Use ANSI escape sequences to style the colors
+    # Use ANSI escape sequences to style the colors (also used in main())
     info_lines = [
-        # f"\033[97m{your_text}\033[0m"
-        # f"\033[1;97m{your_text}\033[0m"
         # Print username and track data
         f"\033[1;97m{get_user()}@{get_player_name()}\033[0m",
         line, f"\033[1;97m{now_playing}\033[0m", line,
