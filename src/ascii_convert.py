@@ -2,7 +2,7 @@ import ascii_magic as magic, urllib.parse, urllib.request, tempfile
 
 # Art to ASCII
 def convert(art_uri):
-    # Init
+    # Init variables
     ascii_art = None
     # Check file type
     if art_uri is None or art_uri.strip() == "": # If return empty string
@@ -18,7 +18,7 @@ def convert(art_uri):
             ascii_art = magic.from_image(urllib.parse.unquote(new_uri))
         # Catch the error
         except OSError as e:
-            print(f'Could not load the image', e)
+            print(f'Error:', e)
 
     # Check for URLs
     elif art_uri.startswith("https://") or art_uri.startswith("http://"):
@@ -31,11 +31,11 @@ def convert(art_uri):
             ascii_art = magic.from_image(temp.name)
         # Catch the error
         except Exception as e :
-            print(str(e))
+            print(f'Error:', str(e))
 
     # Edge cases
     else:
-        print("Null file (edge case")
+        print("Null file (edge case)")
 
     # Print the actual ascii art
     if ascii_art: # Increase columns to make bigger, ratio 2.2 keeps image scaled properly.
