@@ -158,7 +158,7 @@ def get_url():
     # Getting the info from playerctl
     try:
         result = subprocess.run([
-            "playerctl", "metadata", "--format", "{{ trunc(xesam:url, 39) }}"
+            "playerctl", "metadata", "--format", "{{ trunc(xesam:url, 35) }}"
         ], capture_output=True, text=True)
         url = result.stdout.strip()
         return url if url else DEFAULTS["url"]

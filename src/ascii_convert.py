@@ -1,6 +1,6 @@
 import ascii_magic as magic, urllib.parse, urllib.request, tempfile
 
-def default_art(file="default_art.txt"):
+def default_art(file="../assets/default_art.txt"):
     # Get the default music note art from file
     with open(file, "r", encoding="utf-8") as f:
         return f.read().split('\n')
@@ -22,10 +22,10 @@ def convert(art_uri):
             ascii_art = magic.from_image(urllib.parse.unquote(new_uri))
             # Convert to ascii
             ascii_string = ascii_art.to_ascii(columns = 60, width_ratio = 2.2)
-            aascii_art_lines = ascii_string.split('\n')
+            ascii_art_lines = ascii_string.split('\n')
 
         # Catch the error
-        except OSError as e:
+        except Exception as e:
             return default_art()
 
     # Check for URLs
@@ -39,7 +39,7 @@ def convert(art_uri):
             ascii_art = magic.from_image(temp.name)
             # Convert to ascii
             ascii_string = ascii_art.to_ascii(columns = 60, width_ratio = 2.2)
-            aascii_art_lines = ascii_string.split('\n')
+            ascii_art_lines = ascii_string.split('\n')
 
         # Catch the error
         except Exception as e :
