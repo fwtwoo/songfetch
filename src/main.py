@@ -22,7 +22,10 @@ def progress_bar():
     # Calculate percentage
     pos = get_position()
     dur = get_duration()
-    percentage = pos / dur
+    if pos == 0 | dur == 0:
+        percentage = 0
+    else:
+        percentage = pos / dur
 
     # Calculate filled and empty characters
     filled = int(percentage * 16)
