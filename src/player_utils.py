@@ -2,7 +2,7 @@ import subprocess, getpass, re
 
 # Default values for fallback
 DEFAULTS = {
-    "player_name": "No player found",
+    "player_name": "No player",
     "art": "",
     "title": "No title found",
     "artist": "No artist found",
@@ -15,7 +15,7 @@ DEFAULTS = {
     "status": "No status",
     "loop": "Unknown",
     "shuffle": "Unknown",
-    "user": "user"
+    "user": "No User"
 }
 
 # We'll need users audio backend (pipewire, pulse, etc.)
