@@ -1,8 +1,14 @@
+# Documentation and structure files
 plan.md
 structure.md
+
+# Image files
 *.png
 *.jpg
-venv
-/venv
-.venv
-/.venv
+
+# Python virtual environments
+venv/
+.venv/
+
+# Python cache
+__pycache__/
