@@ -1,3 +1,4 @@
+import os
 from ascii_convert import convert
 from player_utils import (
     get_art,
@@ -79,37 +80,38 @@ def get_info_line():
 
 # Main function
 def main():
-    # Stylistic print
-    print()
+    # Get terminal size
+    columns = os.get_terminal_size().columns
+    max_width = 104  # Calculated max width
 
-    # Define the two lists to iterate over
-    art_col = convert(get_art())
+    if columns < max_width:
+        # Set "empty" variables
+        art_col = []
+        max_art = 2
+
+    # Only run if terminal's big enough
+    else:
+        art_col = convert(get_art())
+        # Find the longest line in both column lists
+        max_art = max(len(x) for x in art_col)
+
+    # Always get info lines though
     info_col = get_info_line()
-
-    # Code found on stackoverflow (saved me hella time lol) to print
-    # lists next to each other when one list may be longer than the other:
-
-    # Find the longest line in both column lists
-    max_art = max(len(x) for x in art_col)
     max_info = max(len(y) for y in info_col)
- 
-    # Compare lenghts
-    if len(art_col) > len(info_col):
+
+    # Print lists next to each other when one list may be longer than the other:
+    if len(art_col) > len(info_col):  # Compare lenghts
         # Replace but with added padding (spaces)
         new_info_col = info_col + [''] * (len(art_col) - len(info_col))
         # Loop through all lines in art
         for i in range(len(art_col)):
-            print(f"{art_col[i]:{max_art}}\033[97m{new_info_col[i]:{max_info}}\033[0m")
-
+            print(f"{art_col[i]:{max_art-2}}\033[97m{new_info_col[i]:{max_info}}\033[0m")
     else:
         # Pad but the othre way around
         new_art_col = art_col + [''] * (len(info_col) - len(art_col))
         # Loop all lines in info
         for j in range(len(info_col)):
-            print(f"{new_art_col[j]:{max_art}}\033[97m{info_col[j]:{max_info}}\033[0m")
-
-    # Stylistic print
-    print()
+            print(f"{new_art_col[j]:{max_art-2}}\033[97m{info_col[j]:{max_info}}\033[0m")
 
 # Run the program
 if __name__ == "__main__":

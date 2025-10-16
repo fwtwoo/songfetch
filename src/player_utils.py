@@ -57,7 +57,7 @@ def get_title():
     # Get the artist
     try:
         result = subprocess.run([
-            "playerctl", "metadata", "--format", "{{ title }}"
+            "playerctl", "metadata", "--format", "{{ trunc(title, 33) }}"
         ], capture_output=True, text=True)
         title = result.stdout.strip()
         return title if title else DEFAULTS["title"]
@@ -68,7 +68,7 @@ def get_artist():
     # Get the artist
     try:
         result = subprocess.run([
-            "playerctl", "metadata", "--format", "{{ artist }}"
+            "playerctl", "metadata", "--format", "{{ trunc(artist, 32) }}"
         ], capture_output=True, text=True)
         artist = result.stdout.strip()
         return artist if artist else DEFAULTS["artist"]
@@ -79,7 +79,7 @@ def get_album():
     # Get the album
     try:
         result = subprocess.run([
-            "playerctl", "metadata", "--format", "{{ album }}"
+            "playerctl", "metadata", "--format", "{{ trunc(album, 33) }}"
         ], capture_output=True, text=True)
         album = result.stdout.strip()
         return album if album else DEFAULTS["album"]
