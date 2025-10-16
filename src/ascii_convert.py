@@ -3,7 +3,7 @@ import ascii_magic as magic, urllib.parse, urllib.request, tempfile
 def default_art(file="default_art.txt"):
     # Get the default music note art from file
     with open(file, "r", encoding="utf-8") as f:
-        return f.read().splitlines()
+        return f.read().split('\n')
 
 # Art to ASCII
 def convert(art_uri):
