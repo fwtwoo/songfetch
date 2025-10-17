@@ -1,7 +1,6 @@
-#!/usr/bin/env python3
 import os
-from ascii_convert import convert
-from player_utils import (
+from songfetch.ascii_convert import convert
+from songfetch.player_utils import (
     get_art,
     get_loop,
     get_shuffle,
