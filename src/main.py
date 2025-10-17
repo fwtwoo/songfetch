@@ -42,43 +42,54 @@ def progress_bar():
     display_dur = f"{dur_seconds // 60:02d}:{dur_seconds % 60:02d}"
 
     # Full representation
-    display_str = f" {display_pos} / {display_dur} ({round(percentage * 100)}%)"
+    display_str = f"\033[0m {display_pos} / {display_dur} ({round(percentage * 100)}%)"
 
     return fprint + eprint + display_str
 
 def get_info_line():
     # Get some strings to use later
-    line = "─────────────────────────────────────────"
-    now_playing = "🎵 Now Playing"
-    playback_info = "🎧 Playback Info"
-    audio_system = "🔊 Audio System"
+    line = f"\033[34m─────────────────────────────────────────\033[0m"
+    now_playing = "Now Playing"
+    playback_info = "Playback Info"
+    audio_system = "Audio System"
+
+    normal = ""
+    bright = ""
+
+    # Ansi palette
+    for i in range(8):  # Normal colors (0-7)
+        normal += f"\033[4{i}m   \033[0m"
+    for i in range(8):  # Bright colors (0-7 in bright)
+        bright += f"\033[10{i}m   \033[0m"
 
     # Here we concatenate all the info into one list
-    # Use ANSI escape sequences to style the colors (also used in main())
+    # Use ANSI escape sequences to style the colors
     info_lines = [
-        # Print username and track data
-        f"\033[1;97m{get_user()}@{get_player_name()}\033[0m",
-        line, f"\033[1;97m{now_playing}\033[0m", line,
-        f"Title: {get_title()}",
-        f"Artist: {get_artist()}",
-        f"Album: {get_album()}",
-        f"Duration: {get_duration_formatted()}",
-        f"{progress_bar()}",
+    # Print username and track data
+    f"\033[1;34m{get_user()}\033[0m@\033[1;34m{get_player_name()}\033[0m",
+    line, f"\033[1m{now_playing}\033[0m", line,
+    f"\033[34mTitle\033[0m: {get_title()}",
+    f"\033[34mArtist\033[0m: {get_artist()}",
+    f"\033[34mAlbum\033[0m: {get_album()}",
+    f"\033[34mDuration\033[0m: {get_duration_formatted()}",
+    f"\033[34m{progress_bar()}\033[0m",
 
-        # Print player data
-        line, f"\033[1;97m{playback_info}\033[0m", line,
-        f"Status: {get_status()}",
-        f"Volume: {get_volume()}",
-        f"Loop: {get_loop()}",
-        f"Shuffle: {get_shuffle()}",
-        f"Player: {get_player_name()}",
-        f"URL: {get_url()}",
+    # Print player data
+    line, f"\033[1m{playback_info}\033[0m", line,
+    f"\033[34mStatus\033[0m: {get_status()}",
+    f"\033[34mVolume\033[0m: {get_volume()}",
+    f"\033[34mLoop\033[0m: {get_loop()}",
+    f"\033[34mShuffle\033[0m: {get_shuffle()}",
+    f"\033[34mPlayer\033[0m: {get_player_name()}",
+    f"\033[34mURL\033[0m: {get_url()}",
 
-        # Print system data
-        line, f"\033[1;97m{audio_system}\033[0m", line,
-        f"Backend: {get_backend()}"
-    ]
-
+    # Print system data
+    line, f"\033[1m{audio_system}\033[0m", line,
+    f"\033[34mBackend\033[0m: {get_backend()}",
+    "",
+    # Print palette
+    normal, bright
+]
     return info_lines
 
 # Main function
@@ -100,7 +111,7 @@ def main():
 
     # Always get info lines though
     info_col = get_info_line()
-    max_info = max(len(y) for y in info_col)
+    max_info = max(len(y) for y in info_col[:-2])
 
     # Print lists next to each other when one list may be longer than the other:
     if len(art_col) > len(info_col):  # Compare lenghts
@@ -108,17 +119,16 @@ def main():
         new_info_col = info_col + [''] * (len(art_col) - len(info_col))
         # Loop through all lines in art
         for i in range(len(art_col)):
-            print(f"{art_col[i]:{max_art-2}}\033[97m{new_info_col[i]:{max_info}}\033[0m")
+            print(f"{art_col[i]:{max_art-2}}{new_info_col[i]:{max_info}}")
     else:
         # Pad but the othre way around
         new_art_col = art_col + [''] * (len(info_col) - len(art_col))
         # Loop all lines in info
         for j in range(len(info_col)):
-            print(f"{new_art_col[j]:{max_art-2}}\033[97m{info_col[j]:{max_info}}\033[0m")
+            print(f"{new_art_col[j]:{max_art-2}}{info_col[j]:{max_info}}")
 
 # Run the program
 if __name__ == "__main__":
     main()
 
 # TODO: Add terminal colors at the end like fastfetch or onefetch
-
