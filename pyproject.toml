@@ -7,7 +7,7 @@ name = "songfetch"
 version = "1.0.0"
 description = "A CLI tool that displays current song information in the terminal"
 readme = "README.md"
-license = {text = "GPL-2.0"}
+license = { text = "GPL-2.0" }
 requires-python = ">=3.8"
 dependencies = [
     "ascii-magic",
@@ -20,23 +20,18 @@ classifiers = [
 ]
 
 [project.scripts]
-songfetch = "src.main:main"
+songfetch = "songfetch.main:main"
 
 [project.urls]
 Homepage = "https://github.com/fwtwoo/songfetch"
 Repository = "https://github.com/fwtwoo/songfetch"
 
-[tool.setuptools.packages.find]
-where = ["src"]
-
-[tool.setuptools.package-data]
-"songfetch" = ["../assets/*"]
-
 [tool.setuptools]
+package-dir = {"" = "src"}
 include-package-data = true
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
-[tool.setuptools.package-dir]
-"" = "src"
+[tool.setuptools.package-data]
+songfetch = ["../assets/*"]
