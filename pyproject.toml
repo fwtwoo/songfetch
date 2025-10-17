@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "songfetch"
+version = "1.0.0"
+description = "A CLI tool that displays current song information in the terminal"
+readme = "README.md"
+license = {text = "GPL-2.0"}
+requires-python = ">=3.8"
+dependencies = [
+    "ascii-magic",
+    "Pillow",
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GPL-2.0 License",
+    "Operating System :: POSIX :: Linux",
+]
+
+[project.scripts]
+songfetch = "main:main"
+
+[project.urls]
+Homepage = "https://github.com/fwtwoo/songfetch"
+Repository = "https://github.com/fwtwoo/songfetch"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"*" = ["../assets/*"]
