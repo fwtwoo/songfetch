@@ -3,6 +3,12 @@ A simple CLI tool, very similar to neofetch, that displays current song informat
 
 <img width="1186" height="730" alt="2025-10-17-032127_hyprshot" src="https://github.com/user-attachments/assets/761d714a-932d-4c5b-8065-5f6ae9fcb505" />
 
+<details>
+  <summary>More Images</summary>
+  <img width="2241" height="1400" alt="2025-10-17-031524_hyprshot" src="https://github.com/user-attachments/assets/32ff2ed2-dce1-47f5-b3f7-9aa397152588" />
+<img width="2241" height="1401" alt="2025-10-17-031901_hyprshot" src="https://github.com/user-attachments/assets/adf539ad-9fda-4283-99b5-3c7e7f44a834" />
+</details>
+
 
 ## Player Compatibility
 
