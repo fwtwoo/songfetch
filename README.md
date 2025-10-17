@@ -9,12 +9,18 @@ A simple Linux CLI tool, very similar to something like neo/fastfetch, that disp
 <img width="2241" height="1401" alt="2025-10-17-031901_hyprshot" src="https://github.com/user-attachments/assets/adf539ad-9fda-4283-99b5-3c7e7f44a834" />
 </details>
 
-## Installation (Arch):
+## Installation (Arch Linux):
+You need to first manually install the package for ascii image conversion. You can install it from the AUR:
+```bash
+yay -S python-ascii_magic
+```
+or with pip/pipx:
 ```bash
 pip install ascii-magic
-or
+or,
 pipx install ascii-magic
 ```
+Then install the full program:
 ```bash
 yay -S songfetch
 ```
