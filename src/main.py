@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 from ascii_convert import convert
 from player_utils import (
@@ -67,7 +68,7 @@ def get_info_line():
     info_lines = [
     # Print username and track data
     f"\033[1;34m{get_user()}\033[0m@\033[1;34m{get_player_name()}\033[0m",
-    line, f"\033[1m{now_playing}\033[0m", line,
+    line, f"\033[97m{now_playing}\033[0m", line,
     f"\033[34mTitle\033[0m: {get_title()}",
     f"\033[34mArtist\033[0m: {get_artist()}",
     f"\033[34mAlbum\033[0m: {get_album()}",
@@ -75,7 +76,7 @@ def get_info_line():
     f"\033[34m{progress_bar()}\033[0m",
 
     # Print player data
-    line, f"\033[1m{playback_info}\033[0m", line,
+    line, f"\033[97m{playback_info}\033[0m", line,
     f"\033[34mStatus\033[0m: {get_status()}",
     f"\033[34mVolume\033[0m: {get_volume()}",
     f"\033[34mLoop\033[0m: {get_loop()}",
@@ -84,7 +85,7 @@ def get_info_line():
     f"\033[34mURL\033[0m: {get_url()}",
 
     # Print system data
-    line, f"\033[1m{audio_system}\033[0m", line,
+    line, f"\033[97m{audio_system}\033[0m", line,
     f"\033[34mBackend\033[0m: {get_backend()}",
     "",
     # Print palette
