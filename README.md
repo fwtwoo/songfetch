@@ -9,6 +9,15 @@ A simple Linux CLI tool, very similar to something like neo/fastfetch, that disp
 <img width="2241" height="1401" alt="2025-10-17-031901_hyprshot" src="https://github.com/user-attachments/assets/adf539ad-9fda-4283-99b5-3c7e7f44a834" />
 </details>
 
+## Installation (Arch):
+```bash
+pip install ascii-magic
+or
+pipx install ascii-magic
+```
+```bash
+yay -S songfetch
+```
 
 ## Player Compatibility
 
