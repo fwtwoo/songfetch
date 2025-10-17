@@ -15,12 +15,12 @@ dependencies = [
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: GPL-2.0 License",
+    "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
     "Operating System :: POSIX :: Linux",
 ]
 
 [project.scripts]
-songfetch = "main:main"
+songfetch = "src.main:main"
 
 [project.urls]
 Homepage = "https://github.com/fwtwoo/songfetch"
@@ -30,4 +30,13 @@ Repository = "https://github.com/fwtwoo/songfetch"
 where = ["src"]
 
 [tool.setuptools.package-data]
-"*" = ["../assets/*"]
+"songfetch" = ["../assets/*"]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-dir]
+"" = "src"
