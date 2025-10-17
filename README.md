@@ -66,6 +66,14 @@ pkill playerctld
 ```
 Then restart the systemd service as above.
 
+## Dependencies:
+```bash
+python
+pyhton-pillow
+ascii-magic (install with pip/pipx)
+playerctl
+```
+
 *Note*: Album art colors will be displayed using ANSI terminal colors and will be affected by custom terminal color schemes (pywal, themes etc.).
 
 This program is designed to be used on **actual songs**, so running this while watching a YouTube video for example, might give unwanted results. This is due to the *non- 1 to 1 aspect ratio* of the "album art" (in this case, a YouTube thumbnail.
