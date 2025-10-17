@@ -25,6 +25,14 @@ Then install the full program:
 yay -S songfetch
 ```
 
+## Dependencies:
+```bash
+python
+pyhton-pillow
+python-ascii_magic (or ascii-magic from pip/pipx)
+playerctl
+```
+
 ## Player Compatibility
 
 ### Works Out of the Box
@@ -50,7 +58,7 @@ systemctl --user enable --now mpDris2  # for MPD
 # enable similar services for other players
 ```
 
-**Note:** The `playerctld` daemon must be started in order to get proper updates between different players. To start it and set it to run on startup, run:
+To start the `playerctld` daemon and set it to run on startup, run:
 ```bash
 systemctl --user enable --now playerctld
 ```
@@ -81,16 +89,9 @@ pkill playerctld
 ```
 Then restart the systemd service as above.
 
-## Dependencies:
-```bash
-python
-pyhton-pillow
-ascii-magic (install with pip/pipx)
-playerctl
-```
-
-*Note*: Album art colors will be displayed using ANSI terminal colors and will be affected by custom terminal color schemes (pywal, themes etc.).
+## Notes
+Album art colors will be displayed using ANSI terminal colors and will be affected by custom terminal color schemes (pywal, themes etc.), just like the other big fetching tools.
 
 This program is designed to be used on **actual songs**, so running this while watching a YouTube video for example, might give unwanted results. This is due to the *non- 1 to 1 aspect ratio* of the "album art" (in this case, a YouTube thumbnail.
 
-## Please star this repo if you liked it!
+### Please star this repo if you liked it! ⭐
