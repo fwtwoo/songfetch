@@ -1,8 +1,9 @@
 import ascii_magic as magic, urllib.parse, urllib.request, tempfile
+from importlib import resources
 
 def default_art(file="../assets/default_art.txt"):
     # Get the default music note art from file
-    with open(file, "r", encoding="utf-8") as f:
+    with resources.files("songfetch.assets").joinpath("default_art.txt").open("r", encoding="utf-8") as f:
         return f.read().split('\n')
 
 # Art to ASCII
