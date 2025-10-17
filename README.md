@@ -12,7 +12,7 @@ A simple CLI tool, very similar to neofetch, that displays current song informat
 
 ## Player Compatibility
 
-### Works Out of the Box ✓
+### Works Out of the Box
 
 Most players **should** work without any additional setup:
 - Spotify, VLC, Firefox, Chrome
@@ -70,5 +70,4 @@ Then restart the systemd service as above.
 
 This program is designed to be used on **actual songs**, so running this while watching a YouTube video for example, might give unwanted results. This is due to the *non- 1 to 1 aspect ratio* of the "album art" (in this case, a YouTube thumbnail.
 
-## UNINSTALL
-- VLC, Spotify, Strawberry, Rhythmbox, Chrome, Brave
+## Please star this repo if you liked it!
