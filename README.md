@@ -28,7 +28,7 @@ yay -S songfetch
 ## Dependencies:
 ```bash
 python
-pyhton-pillow
+python-pillow
 python-ascii_magic (or ascii-magic from pip/pipx)
 playerctl
 ```
