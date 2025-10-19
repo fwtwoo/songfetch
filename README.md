@@ -1,8 +1,8 @@
 # songfetch
 A simple Linux CLI tool, very similar to something like neo/fastfetch, that displays current song information in the terminal using playerctl and MPRIS/MPRIS2.
 
-### *Contributions are welcome!*
-
+### Contributions and Issues are welcome!
+---
 <img width="1186" height="730" alt="2025-10-17-032127_hyprshot" src="https://github.com/user-attachments/assets/761d714a-932d-4c5b-8065-5f6ae9fcb505" />
 
 <details>
@@ -31,7 +31,7 @@ yay -S songfetch
 ```bash
 python
 python-pillow
-python-ascii_magic (or ascii-magic from pip/pipx)
+python-ascii_magic (AUR) (or ascii-magic from pip/pipx)
 playerctl
 ```
 
@@ -51,7 +51,7 @@ Some terminal/daemon-based players need an MPRIS bridge installed:
 | Player | Package to Install | Command |
 |--------|-------------------|---------|
 | **MPD** | `mpdris2` | `yay -S mpdris2` (Arch)<br>`sudo dnf install mpdris2` (Fedora)<br>`sudo apt install mpdris2` (Debian/Ubuntu)|
-| **cmus** | `cmus-mpris` | Check your distro's package manager |
+| **cmus** | `cmus` | Check your distro's package manager |
 | **moc** | `moc-mpris` | Check your distro's package manager |
 
 After installing the bridge, enable it:
