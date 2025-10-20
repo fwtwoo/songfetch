@@ -1,6 +1,8 @@
-import subprocess, getpass, re
+#!/usr/bin/env python3
+import dbus, getpass, re
+from math import floor
+from datetime import timedelta
 
-# Default values for fallback
 DEFAULTS = {
     "player_name": "No player",
     "art": "",
@@ -18,7 +20,7 @@ DEFAULTS = {
     "user": "No User"
 }
 
-# We'll need users audio backend (pipewire, pulse, etc.)
+import subprocess
 def get_backend():
     try:
         if subprocess.run(["pgrep", "-x", "pipewire"], capture_output=True, text=True).returncode == 0:
@@ -30,177 +32,172 @@ def get_backend():
     except Exception:
         return "Unknown"
 
-# Now we get some MPRIS info
-def get_player_name():
-    # Get the current player
-    try:
-        result = subprocess.run([
-            "playerctl", "metadata", "--format", "{{ playerName }}"
-        ], capture_output=True, text=True)
-        name = result.stdout.strip()
-        return name if name else DEFAULTS["player_name"]
-    except Exception:
-        return DEFAULTS["player_name"]
+def to_python(obj):
+    # recursive convert dbus types -> python primitives
+    if isinstance(obj, dbus.Array):
+        return [to_python(x) for x in obj]
+    if isinstance(obj, dbus.Dictionary):
+        return {to_python(k): to_python(v) for k, v in obj.items()}
+    if isinstance(obj, (dbus.String, dbus.ObjectPath)):
+        return str(obj)
+    if isinstance(obj, (dbus.Int64, dbus.Int32, dbus.Double)):
+        return float(obj)
+    if isinstance(obj, (dbus.Boolean,)):
+        return bool(obj)
+    return obj
 
-def get_art():
-    # Get the current album art
+def get_player_props():
     try:
-        result = subprocess.run([
-            "playerctl", "metadata", "--format", "{{ mpris:artUrl }}"
-        ], capture_output=True, text=True)
-        art = result.stdout.strip()
-        return art if art else DEFAULTS["art"]
+        bus = dbus.SessionBus()
+        player = bus.get_object('org.mpris.MediaPlayer2.playerctld', '/org/mpris/MediaPlayer2')
+        props = dbus.Interface(player, 'org.freedesktop.DBus.Properties')
+        return props
     except Exception:
-        return DEFAULTS["art"]
+        return None
 
-def get_title():
-    # Get the artist
+def format_duration_seconds(sec):
     try:
-        result = subprocess.run([
-            "playerctl", "metadata", "--format", "{{ trunc(title, 33) }}"
-        ], capture_output=True, text=True)
-        title = result.stdout.strip()
-        return title if title else DEFAULTS["title"]
-    except Exception:
-        return DEFAULTS["title"]
-
-def get_artist():
-    # Get the artist
-    try:
-        result = subprocess.run([
-            "playerctl", "metadata", "--format", "{{ trunc(artist, 32) }}"
-        ], capture_output=True, text=True)
-        artist = result.stdout.strip()
-        return artist if artist else DEFAULTS["artist"]
-    except Exception:
-        return DEFAULTS["artist"]
-
-def get_album():
-    # Get the album
-    try:
-        result = subprocess.run([
-            "playerctl", "metadata", "--format", "{{ trunc(album, 33) }}"
-        ], capture_output=True, text=True)
-        album = result.stdout.strip()
-        return album if album else DEFAULTS["album"]
-    except Exception:
-        return DEFAULTS["album"]
-
-def get_duration_formatted():
-    # Get the album
-    try:
-        result = subprocess.run([
-            "playerctl", "metadata", "--format", "{{ duration(mpris:length) }}"
-        ], capture_output=True, text=True)
-        duration = result.stdout.strip()
-        return duration if duration else DEFAULTS["duration_formatted"]
+        sec = int(round(sec))
+        if sec < 0:
+            return DEFAULTS["duration_formatted"]
+        m, s = divmod(sec, 60)
+        h, m = divmod(m, 60)
+        if h:
+            return f"{h:d}:{m:02d}:{s:02d}"
+        return f"{m:02d}:{s:02d}"
     except Exception:
         return DEFAULTS["duration_formatted"]
 
-# Now we need to get current volume
-def get_volume():
-    # Use backend function
+def get_metadata_raw():
+    props = get_player_props()
+    if not props:
+        return {}
     try:
-        current_backend = get_backend()
-        # Check all major backends
-        if current_backend == "PipeWire":
-            # Most common modern backend
-            result = subprocess.run([
-                "wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"
-            ], capture_output=True, text=True)
-            # Regex to only include the decimal digit
-            final_result = re.search(r'\d+\.\d+', result.stdout)
-            # Very hacky convertion but works for now xD
-            percentage = int(float(final_result.group()) * 100) if final_result else DEFAULTS["volume"]
-        elif current_backend == "PulseAudio":
-            # Older systems
-            result = subprocess.run([
-                "pactl", "get-sink-volume", "@DEFAULT_SINK@"
-            ], capture_output=True, text=True)
-            # Regex to only include the percentage value
-            final_result = re.search(r'(\d+)%', result.stdout)
-            percentage = int(final_result.group()) if final_result else DEFAULTS["volume"]
-        else:
-            # Most likely ALSA
-            result = subprocess.run([
-                "amixer", "get", "Master"
-            ], capture_output=True, text=True)
-            # Similar regex to pulseaudio
-            final_result = re.search(r'(\d+)%', result.stdout)
-            percentage = int(final_result.group()) if final_result else DEFAULTS["volume"]
-        return f"{percentage}%" if isinstance(percentage, int) else DEFAULTS["volume"]
+        md = props.Get('org.mpris.MediaPlayer2.Player', 'Metadata')
+        return to_python(md)
+    except Exception:
+        return {}
+
+def get_player_name():
+    # playerctld doesn't provide separate playerName property; keep previous fallback
+    # try 'xesam:service' in metadata or use default name
+    md = get_metadata_raw()
+    name = md.get('kde:playerName') or md.get('xesam:service') or DEFAULTS["player_name"]
+    return name
+
+def get_art():
+    md = get_metadata_raw()
+    return md.get('mpris:artUrl') or DEFAULTS["art"]
+
+def get_title():
+    md = get_metadata_raw()
+    title = md.get('xesam:title') or DEFAULTS["title"]
+    return (title if len(title) <= 33 else title[:30] + '...')
+
+def get_artist():
+    md = get_metadata_raw()
+    artists = md.get('xesam:artist') or []
+    if isinstance(artists, list):
+        artist = ", ".join([a for a in artists if a])
+    else:
+        artist = str(artists)
+    artist = artist.strip() or DEFAULTS["artist"]
+    return (artist if len(artist) <= 32 else artist[:29] + '...')
+
+def get_album():
+    md = get_metadata_raw()
+    album = md.get('xesam:album') or DEFAULTS["album"]
+    return (album if len(album) <= 33 else album[:30] + '...')
+
+def get_duration_formatted():
+    dur = get_duration()
+    return format_duration_seconds(dur)
+
+def get_volume():
+    props = get_player_props()
+    if not props:
+        return DEFAULTS["volume"]
+    try:
+        vol = props.Get('org.mpris.MediaPlayer2.Player', 'Volume')
+        vol = float(vol)  # MPRIS Volume is 0.0-1.0 usually (some players use raw)
+        perc = int(round(vol * 100)) if 0 <= vol <= 1 else int(round(vol))
+        return f"{perc}%"
     except Exception:
         return DEFAULTS["volume"]
 
 def get_position():
-    # Getting the info from playerctl
+    props = get_player_props()
+    if not props:
+        return DEFAULTS["position"]
     try:
-        result = subprocess.run([
-            "playerctl", "metadata", "--format", "{{ position }}"
-        ], capture_output=True, text=True)
-        pos = result.stdout.strip()
-        return int(pos) if pos.isdigit() else DEFAULTS["position"]
+        pos = props.Get('org.mpris.MediaPlayer2.Player', 'Position')
+        # Position is microseconds
+        return int(pos / 1_000_000)
     except Exception:
         return DEFAULTS["position"]
 
 def get_duration():
-    # Getting the info from playerctl
+    md = get_metadata_raw()
+    # mpris:length is microseconds
     try:
-        result = subprocess.run([
-            "playerctl", "metadata", "--format", "{{ mpris:length }}"
-        ], capture_output=True, text=True)
-        dur = result.stdout.strip()
-        return int(dur) if dur.isdigit() else DEFAULTS["duration"]
+        length = md.get('mpris:length') or 0
+        return int(length / 1_000_000)
     except Exception:
         return DEFAULTS["duration"]
 
 def get_url():
-    # Getting the info from playerctl
-    try:
-        result = subprocess.run([
-            "playerctl", "metadata", "--format", "{{ trunc(xesam:url, 35) }}"
-        ], capture_output=True, text=True)
-        url = result.stdout.strip()
-        return url if url else DEFAULTS["url"]
-    except Exception:
-        return DEFAULTS["url"]
+    md = get_metadata_raw()
+    return md.get('xesam:url') or md.get('kde:mediaSrc') or DEFAULTS["url"]
 
 def get_status():
-    # Getting the rest of the info
+    props = get_player_props()
+    if not props:
+        return DEFAULTS["status"]
     try:
-        result = subprocess.run([
-            "playerctl", "status"
-        ], capture_output=True, text=True)
-        status = result.stdout.strip()
-        return status if status else DEFAULTS["status"]
+        return props.Get('org.mpris.MediaPlayer2.Player', 'PlaybackStatus') or DEFAULTS["status"]
     except Exception:
         return DEFAULTS["status"]
 
 def get_loop():
-    # Getting the rest of the info
+    props = get_player_props()
+    if not props:
+        return DEFAULTS["loop"]
     try:
-        result = subprocess.run([
-            "playerctl", "loop"
-        ], capture_output=True, text=True)
-        loop = result.stdout.strip()
-        return loop if loop else DEFAULTS["loop"]
+        return props.Get('org.mpris.MediaPlayer2.Player', 'LoopStatus') or DEFAULTS["loop"]
     except Exception:
         return DEFAULTS["loop"]
 
 def get_shuffle():
-    # Getting the rest of the info
+    props = get_player_props()
+    if not props:
+        return DEFAULTS["shuffle"]
     try:
-        result = subprocess.run([
-            "playerctl", "shuffle"
-        ], capture_output=True, text=True)
-        shuffle = result.stdout.strip()
-        return shuffle if shuffle else DEFAULTS["shuffle"]
+        sh = props.Get('org.mpris.MediaPlayer2.Player', 'Shuffle')
+        return "On" if sh else "Off"
     except Exception:
         return DEFAULTS["shuffle"]
 
 def get_user():
     try:
-        username = getpass.getuser()
-        return username if username else DEFAULTS["user"]
+        return getpass.getuser() or DEFAULTS["user"]
     except Exception:
         return DEFAULTS["user"]
+
+# Example usage
+if __name__ == "__main__":
+    print({
+        "player_name": get_player_name(),
+        "title": get_title(),
+        "artist": get_artist(),
+        "album": get_album(),
+        "art": get_art(),
+        "position": get_position(),
+        "duration": get_duration(),
+        "duration_formatted": get_duration_formatted(),
+        "volume": get_volume(),
+        "url": get_url(),
+        "status": get_status(),
+        "loop": get_loop(),
+        "shuffle": get_shuffle(),
+        "user": get_user()
+    })
