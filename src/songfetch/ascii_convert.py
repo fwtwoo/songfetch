@@ -1,17 +1,25 @@
-import ascii_magic as magic, urllib.parse, urllib.request, tempfile
+import ascii_magic as magic
+import urllib.parse
+import urllib.request
+import tempfile
 from importlib import resources
+
 
 def default_art(file="../assets/default_art.txt"):
     # Get the default music note art from file
-    with resources.files("songfetch.assets").joinpath("default_art.txt").open("r", encoding="utf-8") as f:
+    with resources.files("songfetch.assets").joinpath(
+        "default_art.txt"
+    ).open("r", encoding="utf-8") as f:
         return f.read().split('\n')
 
 # Art to ASCII
+
+
 def convert(art_uri):
     # Init variables
     ascii_art_lines = None
     # Check file type
-    if art_uri is None or art_uri.strip() == "": # If return empty string
+    if art_uri is None or art_uri.strip() == "":  # If return empty string
         return default_art()
 
     # We need to check each URI type
@@ -22,7 +30,7 @@ def convert(art_uri):
             # Decode to get rid of possible "%20%20..."
             ascii_art = magic.from_image(urllib.parse.unquote(new_uri))
             # Convert to ascii
-            ascii_string = ascii_art.to_ascii(columns = 60, width_ratio = 2.2)
+            ascii_string = ascii_art.to_ascii(columns=60, width_ratio=2.2)
             ascii_art_lines = ascii_string.split('\n')
 
         # Catch the error
@@ -39,11 +47,11 @@ def convert(art_uri):
             urllib.request.urlretrieve(art_uri, temp.name)
             ascii_art = magic.from_image(temp.name)
             # Convert to ascii
-            ascii_string = ascii_art.to_ascii(columns = 60, width_ratio = 2.2)
+            ascii_string = ascii_art.to_ascii(columns=60, width_ratio=2.2)
             ascii_art_lines = ascii_string.split('\n')
 
         # Catch the error
-        except Exception as e :
+        except Exception as e:
             return default_art()
 
     # Edge cases
@@ -55,4 +63,3 @@ def convert(art_uri):
         return ascii_art_lines
     else:
         return default_art()
-

@@ -12,3 +12,6 @@ venv/
 
 # Python cache
 __pycache__/
+
+# egg
+*.egg-info/

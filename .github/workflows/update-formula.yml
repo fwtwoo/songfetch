@@ -1,0 +1,36 @@
+name: Update Homebrew Formula
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  update-formula:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get release version
+        id: release
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+      - name: Download tarball and compute SHA256
+        run: |
+          curl -sL https://github.com/${{ github.repository }}/archive/refs/tags/v${{ steps.release.outputs.version }}.tar.gz -o tarball.tar.gz
+          SHA256=$(shasum -a 256 tarball.tar.gz | cut -d' ' -f1)
+          echo "sha256=$SHA256" >> $GITHUB_ENV
+          sed -i "s|v1\.0\.2|v${{ steps.release.outputs.version }}|g" Formula/songfetch.rb
+          sed -i "s|PLACEHOLDER_SHA256|$SHA256|" Formula/songfetch.rb
+      - name: Commit and push changes
+        run: |
+          git add Formula/songfetch.rb
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git config --global user.name 'GitHub Actions'
+            git config --global user.email 'actions@github.com'
+            git commit -m "Update formula to v${{ steps.release.outputs.version }}"
+            git push
+          fi
