@@ -27,6 +27,13 @@ Then install the full program:
 yay -S songfetch
 ```
 
+## Installation (Homebrew/MacOS):
+
+```bash
+brew tap fwtwoo/songfetch https://github.com/fwtwoo/songfetch
+brew install songfetch
+```
+
 ## Dependencies:
 ```bash
 python
